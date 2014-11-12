@@ -4,6 +4,8 @@
         Title="MainWindow" Height="350" Width="525">
     <Grid>
         <Label Name="LblTempo" Content="Tempo" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <Slider Name="SldTempo" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top" Height="20" Width="193" Maximum="2" Value="1" LargeChange="0.1" TickFrequency="0.1"/>
+        <Slider Name="SldVelocity" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" Width="193" Maximum="100" Minimum="-100"/>
 
     </Grid>
 </Window>

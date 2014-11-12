@@ -35,49 +35,49 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="avenue.core">
-      <HintPath>..\..\..\Libs\nextmidi\Package\avenue.core.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\avenue.core.dll</HintPath>
     </Reference>
     <Reference Include="avenue.filing">
-      <HintPath>..\..\..\Libs\nextmidi\Package\avenue.filing.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\avenue.filing.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.data">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.data.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.data.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.dataelement">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.dataelement.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.dataelement.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.dataelement.status">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.dataelement.status.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.dataelement.status.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.filing.midi">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.filing.midi.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.filing.midi.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.filing.midi.chunk">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.filing.midi.chunk.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.filing.midi.chunk.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.filing.midi.midifile">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.filing.midi.midifile.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.filing.midi.midifile.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.midiport.bridge">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.midiport.bridge.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.midiport.bridge.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.midiport.core">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.midiport.core.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.midiport.core.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.midiport.input">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.midiport.input.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.midiport.input.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.midiport.input.core">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.midiport.input.core.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.midiport.input.core.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.midiport.output">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.midiport.output.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.midiport.output.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.midiport.output.core">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.midiport.output.core.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.midiport.output.core.dll</HintPath>
     </Reference>
     <Reference Include="nextmidi.time">
-      <HintPath>..\..\..\Libs\nextmidi\Package\nextmidi.time.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\Package\nextmidi.time.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

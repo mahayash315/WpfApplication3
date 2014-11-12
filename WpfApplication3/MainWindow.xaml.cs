@@ -29,6 +29,8 @@ namespace WpfApplication3
     /// </summary>
     public partial class MainWindow : Window
     {
+        MyMidiOutPort MyMidiOutPort;
+        MidiData MidiData;
         ITempoMap TempoMap;
         MidiPlayer Player;
         BackgroundWorker worker = new BackgroundWorker();
@@ -49,26 +51,26 @@ namespace WpfApplication3
                 Console.WriteLine("File does not exist");
                 return;
             }
-            var midiData = MidiReader.ReadFrom(fname, Encoding.GetEncoding("shift-jis"));
+            MidiData = MidiReader.ReadFrom(fname, Encoding.GetEncoding("shift-jis"));
 
             // 全ての MIDI ノートを 4 半音上げる
-            foreach (var track in midiData.Tracks)
+            foreach (var track in MidiData.Tracks)
             {
                 foreach (var note in track.GetData<NoteEvent>())
                 {
-                    note.Note += 0;
+                    note.Velocity /= 2;
                 }
             }
 
             // テンポマップを作成
-            var domain = new MyMidiFileDomain(midiData);
+            var domain = new MidiFileDomain(MidiData);
             TempoMap = domain.TempoMap;
 
             // MIDI ポートを作成
-            var port = new MidiOutPort(0);
+            MyMidiOutPort = new MyMidiOutPort(new MidiOutPort(0));
             try
             {
-                port.Open();
+                MyMidiOutPort.Open();
             }
             catch
             {
@@ -79,13 +81,32 @@ namespace WpfApplication3
             // バックグラウンドワーカの設定
             worker.DoWork += worker_DoWork;
 
+            // slider
+            SldTempo.ValueChanged += SldTempo_ValueChanged;
+            SldVelocity.ValueChanged += SldVelocity_ValueChanged;
+
             // MIDI プレーヤーを作成
-            Player = new MidiPlayer(port);
+            Player = new MidiPlayer(MyMidiOutPort);
             Player.Starting += Player_Starting;
             Player.Stopped += Player_Stopped;
 
             // MIDI ファイルを再生
             Player.Play(domain);
+        }
+
+        void SldVelocity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (MyMidiOutPort != null)
+            {
+                MyMidiOutPort.DeltaVelocity = (int) e.NewValue;
+            }
+        }
+        void SldTempo_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (MyMidiOutPort != null)
+            {
+                MyMidiOutPort.TickCoeff = e.NewValue;
+            }
         }
 
         void MainWindow_Closing(object sender, CancelEventArgs e)
@@ -109,69 +130,68 @@ namespace WpfApplication3
             {
                 Dispatcher.Invoke(delegate()
                 {
-                    LblTempo.Content = TempoMap.GetTempo(Player.MusicTime.Tick).ToString();
+                    LblTempo.Content = TempoMap.GetTempo(Player.Tick).ToString();
                 });
+
+                
                 System.Threading.Thread.Sleep(100);
             }
         }
     }
 
-    class MyMidiFileDomain : IMidiFileDomain
+    class MyMidiOutPort : IMidiOutPort
     {
-        MidiFileDomain Delegate;
-        MyTempoMap MyTempoMap;
+        MidiOutPort Delegate;
+        public int DeltaVelocity = 0;
+        public double TickCoeff = 1.0;
 
-        public MyMidiFileDomain(MidiData midiData)
+        public MyMidiOutPort(MidiOutPort midiOutPort)
         {
-            Delegate = new MidiFileDomain(midiData);
-            MyTempoMap = new MyTempoMap(Delegate);
+            Delegate = midiOutPort;
         }
 
-        public NextMidi.Data.MidiData MidiData
+        public void Send(IMidiEvent data)
         {
-            get { return Delegate.MidiData; }
+            modifyEvent(data);
+            Delegate.Send(data);
         }
 
-        public NextMidi.Data.Score.IMusicMap MusicMap
+        public void Close()
         {
-            get { return Delegate.MusicMap; }
+            Delegate.Close();
         }
 
-        public NextMidi.Data.Score.ITempoMap TempoMap
+        public bool IsOpen
         {
-            get { return MyTempoMap; }
-        }
-    }
-
-    class MyTempoMap : ITempoMap
-    {
-        ITempoMap Delegate;
-
-        public MyTempoMap(IMidiFileDomain domain)
-        {
-            Delegate = domain.TempoMap;
+            get
+            {
+                return Delegate.IsOpen;
+            }
+            set
+            {
+                Delegate.IsOpen = value;
+            }
         }
 
-        public int GetTempo(int tick)
+        public string Name
         {
-            return Delegate.GetTempo(tick);
+            get { return Delegate.Name; }
         }
 
-        public int ToMilliSeconds(int tick)
+        public void Open()
         {
-            return Delegate.ToMilliSeconds(tick);
+            Delegate.Open();
         }
 
-        public int ToTick(int msec)
+        private void modifyEvent(IMidiEvent data)
         {
-            int tick = Delegate.ToTick(msec);
-            return (int)((double)tick * 1.5);
+            // TODO do something
+            if (data is NoteOnEvent)
+            {
+                var note = (NoteOnEvent)data;
+                note.Tick = (int)(note.Tick * TickCoeff);
+                note.Velocity = (byte) Math.Max(0, Math.Min((int)note.Velocity + DeltaVelocity, 127));
+            }
         }
-
-        public TimeSpan ToTime(int tick)
-        {
-            return Delegate.ToTime(tick);
-        }
-
     }
 }
