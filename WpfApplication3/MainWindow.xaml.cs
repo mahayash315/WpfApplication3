@@ -67,7 +67,7 @@ namespace WpfApplication3
             TempoMap = domain.TempoMap;
 
             // MIDI ポートを作成
-            MyMidiOutPort = new MyMidiOutPort(new MidiOutPort(0));
+            MyMidiOutPort = new MyMidiOutPort(0);
             try
             {
                 MyMidiOutPort.Open();
@@ -139,50 +139,20 @@ namespace WpfApplication3
         }
     }
 
-    class MyMidiOutPort : IMidiOutPort
+    class MyMidiOutPort : MidiOutPort
     {
-        MidiOutPort Delegate;
         public int DeltaVelocity = 0;
         public double TickCoeff = 1.0;
-
-        public MyMidiOutPort(MidiOutPort midiOutPort)
+        public MyMidiOutPort(int index):base(index)
         {
-            Delegate = midiOutPort;
         }
-
-        public void Send(IMidiEvent data)
-        {
-            modifyEvent(data);
-            Delegate.Send(data);
-        }
-
-        public void Close()
-        {
-            Delegate.Close();
-        }
-
-        public bool IsOpen
-        {
-            get
+        public new void Send(IMidiEvent data) {
+            if (data is NoteEvent)
             {
-                return Delegate.IsOpen;
+                modifyEvent(data);
             }
-            set
-            {
-                Delegate.IsOpen = value;
-            }
+            base.Send(data);
         }
-
-        public string Name
-        {
-            get { return Delegate.Name; }
-        }
-
-        public void Open()
-        {
-            Delegate.Open();
-        }
-
         private void modifyEvent(IMidiEvent data)
         {
             // TODO do something
@@ -190,8 +160,64 @@ namespace WpfApplication3
             {
                 var note = (NoteOnEvent)data;
                 note.Tick = (int)(note.Tick * TickCoeff);
-                note.Velocity = (byte) Math.Max(0, Math.Min((int)note.Velocity + DeltaVelocity, 127));
+                note.Velocity = (byte)Math.Max(0, Math.Min((int)note.Velocity + DeltaVelocity, 127));
             }
         }
     }
+
+    //class MyMidiOutPort : IMidiOutPort
+    //{
+    //    MidiOutPort Delegate;
+    //    public int DeltaVelocity = 0;
+    //    public double TickCoeff = 1.0;
+
+    //    public MyMidiOutPort(MidiOutPort midiOutPort)
+    //    {
+    //        Delegate = midiOutPort;
+    //    }
+
+    //    public void Send(IMidiEvent data)
+    //    {
+    //        modifyEvent(data);
+    //        Delegate.Send(data);
+    //    }
+
+    //    public void Close()
+    //    {
+    //        Delegate.Close();
+    //    }
+
+    //    public bool IsOpen
+    //    {
+    //        get
+    //        {
+    //            return Delegate.IsOpen;
+    //        }
+    //        set
+    //        {
+    //            Delegate.IsOpen = value;
+    //        }
+    //    }
+
+    //    public string Name
+    //    {
+    //        get { return Delegate.Name; }
+    //    }
+
+    //    public void Open()
+    //    {
+    //        Delegate.Open();
+    //    }
+
+    //    private void modifyEvent(IMidiEvent data)
+    //    {
+    //        // TODO do something
+    //        if (data is NoteOnEvent)
+    //        {
+    //            var note = (NoteOnEvent)data;
+    //            note.Tick = (int)(note.Tick * TickCoeff);
+    //            note.Velocity = (byte) Math.Max(0, Math.Min((int)note.Velocity + DeltaVelocity, 127));
+    //        }
+    //    }
+    //}
 }
