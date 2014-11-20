@@ -147,10 +147,7 @@ namespace WpfApplication3
         {
         }
         public new void Send(IMidiEvent data) {
-            if (data is NoteEvent)
-            {
-                modifyEvent(data);
-            }
+            modifyEvent(data);
             base.Send(data);
         }
         private void modifyEvent(IMidiEvent data)
